@@ -8,12 +8,14 @@ import "./App.css";
 import {Button} from "@auth0/styleguide-react-components/lib/index";
 import Api from "./api";
 import Col from "react-bootstrap/es/Col";
+import config from "./config";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {htmlValue: null, key: 0};
+        this.loginPageUrl = config.loginPageUrl
     }
 
     componentDidMount() {
@@ -50,13 +52,14 @@ class App extends Component {
                         <Button onClick={this.onClick}>Save</Button>
                     </Col>
                     <Col xs={6}>
+                        <Button href={this.loginPageUrl} target="_blank">Open live version</Button>
                         <iframe
                             id="custom-login-page-preview"
                             ref={iframe => {
                                 this.iframe = iframe;
                             }}
                             title="custom_login_page_preview"
-                            src="https://test-xr4.auth0.com/login?client=BgPq4dvkYKOw6M3aFXFvy0sIhPeVzs45">
+                            src={this.loginPageUrl}>
                         </iframe>
                     </Col>
                 </div>
