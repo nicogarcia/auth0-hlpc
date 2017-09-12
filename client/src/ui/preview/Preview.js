@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Button} from "@auth0/styleguide-react-components/lib/index";
 import * as config from "../../config/index";
+import PreviewHeader from "./header/PreviewHeader";
 
 class Preview extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class Preview extends Component {
     render() {
         return (
             <div>
+                <PreviewHeader/>
                 <Button href={this.loginPageUrl} target="_blank">Open live version</Button>
                 <iframe
                     id="custom-login-page-preview"
