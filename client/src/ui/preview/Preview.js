@@ -11,9 +11,11 @@ class Preview extends Component {
     }
 
     render() {
+        const {onToggleCollapseEditor} = this.props;
+
         return (
             <div>
-                <PreviewHeader/>
+                <PreviewHeader onToggleCollapseEditor={onToggleCollapseEditor}/>
                 <iframe
                     id="custom-login-page-preview"
                     ref={iframe => {
