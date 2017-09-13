@@ -1,34 +1,27 @@
-import React, {Component} from "react";
+import React from "react";
 import "./PreviewHeader.css";
 import {Button} from "@auth0/styleguide-react-components/lib/index";
-import * as config from "../../../config/index";
 import {observer} from "mobx-react";
+import PropTypes from "prop-types";
 
-class PreviewHeader extends Component {
+const PreviewHeader = ({editorCollapsed, loginPageUrl, onToggleEditor}) => {
+    return (
+        <div>
+            <h4 className="left">
+                Current Login Page
+            </h4>
+            <Button onClick={onToggleEditor}>
+                {editorCollapsed ? 'Open Editor' : 'Close editor'}
+            </Button>
+            <Button href={loginPageUrl} target="_blank">Open live version</Button>
+        </div>
+    );
+};
 
-    constructor(props) {
-        super(props);
-
-        this.loginPageUrl = config.loginPageUrl;
-    }
-
-    onToggleEditor = () => {
-        this.props.editor.collapsed = !this.props.editor.collapsed;
-    };
-
-    render() {
-        return (
-            <div>
-                <h4 className="left">
-                    Current Login Page
-                </h4>
-                <Button onClick={this.onToggleEditor}>
-                    {this.props.editor.collapsed ? 'Open Editor' : 'Close editor'}
-                </Button>
-                <Button href={this.loginPageUrl} target="_blank">Open live version</Button>
-            </div>
-        );
-    }
-}
+PreviewHeader.propTypes = {
+    editorCollapsed: PropTypes.bool.isRequired,
+    loginPageUrl: PropTypes.string.isRequired,
+    onToggleEditor: PropTypes.func.isRequired
+};
 
 export default observer(PreviewHeader);

@@ -10,10 +10,17 @@ class Preview extends Component {
         this.loginPageUrl = config.loginPageUrl;
     }
 
+    onToggleEditor = () => {
+        this.props.editor.collapsed = !this.props.editor.collapsed
+    };
+
     render() {
         return (
             <div>
-                <PreviewHeader editor={this.props.editor}/>
+                <PreviewHeader editorCollapsed={this.props.editor.collapsed}
+                               loginPageUrl={this.loginPageUrl}
+                               onToggleEditor={this.onToggleEditor}
+                />
                 <iframe
                     id="custom-login-page-preview"
                     ref={iframe => {
@@ -28,7 +35,7 @@ class Preview extends Component {
 }
 
 Preview.propTypes = {
-    editor: PropTypes.observableObject
+    editor: PropTypes.observableObject.isRequired
 };
 
 export default observer(Preview);
