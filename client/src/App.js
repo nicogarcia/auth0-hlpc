@@ -28,7 +28,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-    store: PropTypes.observableObject
+    store: PropTypes.observableObject.isRequired
 };
 
 export default observer(App);
