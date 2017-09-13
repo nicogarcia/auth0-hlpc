@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import CodeMirror from "react-codemirror";
 import {Button} from "@auth0/styleguide-react-components/lib/index";
 import Api from "../../api";
+import {observer, PropTypes} from "mobx-react";
 
 class Editor extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class Editor extends Component {
         Api.setCustomLoginPage(this.state.htmlValue)
             .then(console.log)
             .then(() => {
-                this.iframe.src = this.iframe.src;
+                this.props.preview.iframe.src = this.props.preview.iframe.src;
             });
     };
 
@@ -45,4 +46,9 @@ class Editor extends Component {
     }
 }
 
-export default Editor;
+Editor.propTypes = {
+    preview: PropTypes.observableObject.isRequired,
+    editor: PropTypes.observableObject.isRequired
+};
+
+export default observer(Editor);

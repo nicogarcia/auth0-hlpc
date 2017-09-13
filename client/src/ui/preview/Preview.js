@@ -24,7 +24,7 @@ class Preview extends Component {
                 <iframe
                     id="custom-login-page-preview"
                     ref={iframe => {
-                        this.iframe = iframe;
+                        this.props.preview.iframe = iframe;
                     }}
                     title="custom_login_page_preview"
                     src={this.loginPageUrl}>
@@ -35,7 +35,8 @@ class Preview extends Component {
 }
 
 Preview.propTypes = {
-    editor: PropTypes.observableObject.isRequired
+    editor: PropTypes.observableObject.isRequired,
+    preview: PropTypes.observableObject.isRequired
 };
 
 export default observer(Preview);

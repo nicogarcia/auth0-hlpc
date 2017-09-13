@@ -15,11 +15,11 @@ class App extends Component {
             <div className="App">
                 <div className="container-fluid">
                     <Col xs={4} hidden={this.props.store.editor.collapsed}>
-                        <Editor/>
+                        <Editor editor={this.props.store.editor} preview={this.props.store.preview}/>
                     </Col>
 
                     <Col xs={this.props.store.editor.collapsed ? 12 : 8}>
-                        <Preview editor={this.props.store.editor}/>
+                        <Preview editor={this.props.store.editor} preview={this.props.store.preview}/>
                     </Col>
                 </div>
             </div>
