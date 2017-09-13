@@ -7,7 +7,7 @@ import "./App.css";
 import Col from "react-bootstrap/es/Col";
 import Editor from "./ui/editor/Editor";
 import Preview from "./ui/preview/Preview";
-import {observer} from "mobx-react";
+import {observer, PropTypes} from "mobx-react";
 
 class App extends Component {
     render() {
@@ -26,5 +26,9 @@ class App extends Component {
         );
     }
 }
+
+App.propTypes = {
+    store: PropTypes.observableObject
+};
 
 export default observer(App);

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import * as config from "../../config/index";
 import PreviewHeader from "./header/PreviewHeader";
-import {observer} from "mobx-react";
+import {observer, PropTypes} from "mobx-react";
 
 class Preview extends Component {
     constructor(props) {
@@ -26,5 +26,9 @@ class Preview extends Component {
         );
     }
 }
+
+Preview.propTypes = {
+    editor: PropTypes.observableObject
+};
 
 export default observer(Preview);
