@@ -1,21 +1,19 @@
 import React, {Component} from "react";
 import * as config from "../../config/index";
 import PreviewHeader from "./header/PreviewHeader";
+import {observer} from "mobx-react";
 
 class Preview extends Component {
     constructor(props) {
         super(props);
 
         this.loginPageUrl = config.loginPageUrl;
-        this.state = {};
     }
 
     render() {
-        const {onToggleCollapseEditor} = this.props;
-
         return (
             <div>
-                <PreviewHeader onToggleCollapseEditor={onToggleCollapseEditor}/>
+                <PreviewHeader editor={this.props.editor}/>
                 <iframe
                     id="custom-login-page-preview"
                     ref={iframe => {
@@ -29,4 +27,4 @@ class Preview extends Component {
     }
 }
 
-export default Preview;
+export default observer(Preview);

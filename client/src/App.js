@@ -7,28 +7,19 @@ import "./App.css";
 import Col from "react-bootstrap/es/Col";
 import Editor from "./ui/editor/Editor";
 import Preview from "./ui/preview/Preview";
+import {observer} from "mobx-react";
 
 class App extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {editor: {collapsed: true}};
-    }
-
-    onToggleCollapseEditor = () => {
-        this.setState({editor: {...this.state.editor, collapsed: !this.state.editor.collapsed}})
-    };
-
     render() {
         return (
             <div className="App">
                 <div className="container-fluid">
-                    <Col xs={4} hidden={this.state.editor.collapsed}>
+                    <Col xs={4} hidden={this.props.store.editor.collapsed}>
                         <Editor/>
                     </Col>
-                    <Col xs={this.state.editor.collapsed ? 12 : 8}>
-                        <Preview onToggleCollapseEditor={this.onToggleCollapseEditor}/>
+
+                    <Col xs={this.props.store.editor.collapsed ? 12 : 8}>
+                        <Preview editor={this.props.store.editor}/>
                     </Col>
                 </div>
             </div>
@@ -36,4 +27,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default observer(App);
