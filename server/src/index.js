@@ -17,7 +17,7 @@ module.exports = function (context, cb) {
         customConfigPlaceholder: '@@customConfig@@'
     };
 
-    const managementApi = new ManagementApiClient(request, config.audience, config.customConfigPlaceholder);
+    const managementApi = new ManagementApiClient(request, config.audience, null, config.customConfigPlaceholder);
 
     const getAccessTokenPromise = getOAuthToken(config, secrets)
         .then(response => {
