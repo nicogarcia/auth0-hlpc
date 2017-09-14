@@ -1,6 +1,21 @@
 'use strict';
-
+const Express = require('express');
+const Webtask = require('webtask-tools');
+const bodyParser = require('body-parser');
+const server = Express();
 const request = require('request-promise');
+
+server.use(bodyParser);
+
+module.exports = Webtask.fromExpress(server);
+
+server.get('/', (req, res) => {
+
+});
+
+server.post('/', (req, res) => {
+
+});
 
 module.exports = function (context, cb) {
     // TODO: Store in secrets
@@ -98,20 +113,19 @@ class ManagementApiClient {
     }
 
     getCustomLoginPage() {
-        console.log('-----------------', this, '----------------');
         return this.getGlobalClient().then(client => client.custom_login_page);
     }
 
-    setCustomLoginPage(clientId, newCustomLoginPage, newCustomConfig) {
-        newCustomLoginPage = this.mergeCustomLoginPageWithConfig(newCustomLoginPage, newCustomConfig);
-
-        return this.requestWithConfig({
-            method: 'PATCH',
-            uri: this.getEndpointUrl(`clients/${clientId}`),
-            body: {
-                custom_login_page: newCustomLoginPage
-            }
-        });
+    setCustomLoginPage(clientId, newCustomLoginPage) {
+        return this
+            .requestWithConfig({
+                method: 'PATCH',
+                uri: this.getEndpointUrl(`clients/${clientId}`),
+                body: {
+                    custom_login_page: newCustomLoginPage
+                }
+            })
+            .then(() => newCustomLoginPage);
     }
 
     setAccessToken(accessToken) {
