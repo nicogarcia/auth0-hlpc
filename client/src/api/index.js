@@ -12,13 +12,13 @@ class Api {
             .then(json => json.custom_login_page);
     }
 
-    setCustomLoginPage(customLoginPage) {
+    setCustomLoginPage(customLoginPage, customConfig) {
         return this.fetchEndpoint('', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({custom_login_page: customLoginPage})
+            body: JSON.stringify({custom_login_page: customLoginPage, custom_config: customConfig})
         }).then(res => res.json());
     }
 
