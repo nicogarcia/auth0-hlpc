@@ -13,10 +13,11 @@ module.exports = function (context, cb) {
 
     const config = {
         authEndpoint: 'https://test-xr4.auth0.com/oauth/token',
-        audience: 'https://test-xr4.auth0.com/api/v2/'
+        audience: 'https://test-xr4.auth0.com/api/v2/',
+        customConfigPlaceholder: '@@customConfig@@'
     };
 
-    const managementApi = new ManagementApiClient(request, config.audience);
+    const managementApi = new ManagementApiClient(request, config.audience, config.customConfigPlaceholder);
 
     const getAccessTokenPromise = getOAuthToken(config, secrets)
         .then(response => {
@@ -28,7 +29,9 @@ module.exports = function (context, cb) {
             return cb('custom_login_page field is required');
         }
 
-        POST(cb, getAccessTokenPromise, managementApi, context.body.custom_login_page);
+        context.body.custom_config = context.body.custom_config || {};
+
+        POST(cb, getAccessTokenPromise, managementApi, context.body.custom_login_page, context.body.custom_config);
     } else {
         GET(cb, getAccessTokenPromise, managementApi);
     }
@@ -65,20 +68,23 @@ const GET = (cb, getAccessTokenPromise, managementApi) => {
         .catch(onUnhandledError(cb));
 };
 
-const POST = (cb, getAccessTokenPromise, managementApi, customLoginPageHtml) => {
+const POST = (cb, getAccessTokenPromise, managementApi, customLoginPageHtml, customConfig) => {
     getAccessTokenPromise
         .then(() => managementApi.getGlobalClient())
-        .then(globalClient => managementApi.setCustomLoginPage(globalClient.client_id, customLoginPageHtml))
+        .then(globalClient =>
+            managementApi.setCustomLoginPage(globalClient.client_id, customLoginPageHtml, customConfig)
+        )
         .then(response => cb(null, response))
         .catch(onUnhandledError(cb));
 };
 
 class ManagementApiClient {
 
-    constructor(httpClient, apiUrl, accessToken) {
+    constructor(httpClient, apiUrl, accessToken, customConfigPlaceholder) {
         this.httpClient = httpClient;
         this.apiUrl = apiUrl;
         this.accessToken = accessToken;
+        this.customConfigPlaceholder = customConfigPlaceholder;
     }
 
     defaultConfigBuilder() {
@@ -98,7 +104,9 @@ class ManagementApiClient {
         return this.getGlobalClient().then(client => client.custom_login_page);
     }
 
-    setCustomLoginPage(clientId, newCustomLoginPage) {
+    setCustomLoginPage(clientId, newCustomLoginPage, newCustomConfig) {
+        newCustomLoginPage = this.mergeCustomLoginPageWithConfig(newCustomLoginPage, newCustomConfig);
+
         return this.requestWithConfig({
             method: 'PATCH',
             uri: this.getEndpointUrl(`clients/${clientId}`),
@@ -110,6 +118,16 @@ class ManagementApiClient {
 
     setAccessToken(accessToken) {
         this.accessToken = accessToken;
+    }
+
+    mergeCustomLoginPageWithConfig(customLoginPage, customConfig) {
+        const regex = new RegExp(this.customConfigPlaceholder);
+
+        const stringifiedConfig = JSON.stringify(customConfig);
+
+        const serializedCustomConfig = Buffer.from(encodeURIComponent(stringifiedConfig), 'base64');
+
+        return customLoginPage.replace(regex, serializedCustomConfig);
     }
 
     findGlobalClient(clients) {
