@@ -5,10 +5,8 @@ const request = require('request-promise');
 module.exports = function (context, cb) {
     // TODO: Store in secrets
     const secrets = {
-        client: {
-            clientId: 'BgPq4dvkYKOw6M3aFXFvy0sIhPeVzs45',
-            clientSecret: 'CI5vuR8OnrCuzbhLSF5JcUFbTYjCTWZQQZb_hWrqdSchxLx5jxo7OTMfWzI95waM'
-        }
+        clientId: 'BgPq4dvkYKOw6M3aFXFvy0sIhPeVzs45',
+        clientSecret: 'CI5vuR8OnrCuzbhLSF5JcUFbTYjCTWZQQZb_hWrqdSchxLx5jxo7OTMfWzI95waM'
     };
 
     const config = {
@@ -19,7 +17,7 @@ module.exports = function (context, cb) {
 
     const managementApi = new ManagementApiClient(request, config.audience, null, config.customConfigPlaceholder);
 
-    const getAccessTokenPromise = getOAuthToken(config, secrets)
+    const getAccessTokenPromise = getOAuthToken(config, secrets.clientId, secrets.clientSecret)
         .then(response => {
             managementApi.setAccessToken(response.access_token);
         });
@@ -37,15 +35,15 @@ module.exports = function (context, cb) {
     }
 };
 
-const getOAuthToken = (config, secrets) => {
+const getOAuthToken = (config, clientId, clientSecret) => {
     return request({
             method: 'POST',
             uri: config.authEndpoint,
             headers: {'content-type': 'application/json'},
             body: {
                 grant_type: 'client_credentials',
-                client_id: secrets.client.clientId,
-                client_secret: secrets.client.clientSecret,
+                client_id: clientId,
+                client_secret: clientSecret,
                 audience: config.audience
             },
             json: true
