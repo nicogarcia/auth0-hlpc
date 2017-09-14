@@ -1,11 +1,10 @@
 'use strict';
+const Promise = require('bluebird');
 const Express = require('express');
 const Webtask = require('webtask-tools');
 const bodyParser = require('body-parser');
 const server = Express();
 const request = require('request-promise');
-
-server.use(bodyParser);
 
 module.exports = Webtask.fromExpress(server);
 
@@ -21,21 +20,25 @@ const config = {
     customConfigPlaceholder: '@@customConfig@@'
 };
 
-const managementApi = new ManagementApiClient(request, config.audience, null, config.customConfigPlaceholder);
+server.use(bodyParser.json());
 
 server.use((req, res, next) => {
+    req.managementApi = new ManagementApiClient(request, config.audience, null, config.customConfigPlaceholder);
+
     getOAuthToken(config, secrets.clientId, secrets.clientSecret)
         .then(response => {
-            managementApi.setAccessToken(response.access_token);
+            req.managementApi.setAccessToken(response.access_token);
             next();
         })
-        .catch((err) => {
-            res.status(500).send({error: err});
-        });
+        .catch(onUnhandledError(res));
 });
 
 server.get('/', (req, res) => {
-
+    getClientData(req.webtaskContext.storage, secrets.clientId)
+        .then(clientData => {
+            return res.json(clientData);
+        })
+        .catch(onUnhandledError(res));
 });
 
 server.post('/', (req, res) => {
@@ -58,19 +61,10 @@ const getOAuthToken = (config, clientId, clientSecret) => {
     );
 };
 
-const onUnhandledError = (cb) => {
+const onUnhandledError = (res) => {
     return err => {
-        cb(err);
+        res.status(500).json({error: err});
     };
-};
-
-const GET = (cb, getAccessTokenPromise, managementApi) => {
-    getAccessTokenPromise
-        .then(() => managementApi.getCustomLoginPage())
-        .then(customLoginPage => {
-            return cb(null, {custom_login_page: customLoginPage});
-        })
-        .catch(onUnhandledError(cb));
 };
 
 const POST = (cb, getAccessTokenPromise, managementApi, customLoginPageHtml, customConfig) => {
@@ -81,6 +75,21 @@ const POST = (cb, getAccessTokenPromise, managementApi, customLoginPageHtml, cus
         )
         .then(response => cb(null, response))
         .catch(onUnhandledError(cb));
+};
+
+const initialStore = () => ({clients: {}});
+
+const getClientData = (storage, clientId) => {
+    return getStore(storage)
+        .then(store => {
+            let defaultData = {customLoginPage: 'asdf', customConfig: {asdf: 'asdf'}};
+            return store.clients[clientId] || defaultData;
+        });
+};
+
+const getStore = (storage) => {
+    return Promise.promisify(storage.get)()
+        .then(store => typeof store === 'undefined' ? initialStore() : store);
 };
 
 class ManagementApiClient {
@@ -102,10 +111,6 @@ class ManagementApiClient {
     getGlobalClient() {
         return this.requestWithConfig({uri: this.getEndpointUrl('clients')})
             .then(this.findGlobalClient);
-    }
-
-    getCustomLoginPage() {
-        return this.getGlobalClient().then(client => client.custom_login_page);
     }
 
     setCustomLoginPage(clientId, newCustomLoginPage) {
