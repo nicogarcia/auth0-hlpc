@@ -9,6 +9,31 @@ server.use(bodyParser);
 
 module.exports = Webtask.fromExpress(server);
 
+// TODO: Store in secrets
+const secrets = {
+    clientId: 'BgPq4dvkYKOw6M3aFXFvy0sIhPeVzs45',
+    clientSecret: 'CI5vuR8OnrCuzbhLSF5JcUFbTYjCTWZQQZb_hWrqdSchxLx5jxo7OTMfWzI95waM'
+};
+
+const config = {
+    authEndpoint: 'https://test-xr4.auth0.com/oauth/token',
+    audience: 'https://test-xr4.auth0.com/api/v2/',
+    customConfigPlaceholder: '@@customConfig@@'
+};
+
+const managementApi = new ManagementApiClient(request, config.audience, null, config.customConfigPlaceholder);
+
+server.use((req, res, next) => {
+    getOAuthToken(config, secrets.clientId, secrets.clientSecret)
+        .then(response => {
+            managementApi.setAccessToken(response.access_token);
+            next();
+        })
+        .catch((err) => {
+            res.status(500).send({error: err});
+        });
+});
+
 server.get('/', (req, res) => {
 
 });
@@ -16,39 +41,6 @@ server.get('/', (req, res) => {
 server.post('/', (req, res) => {
 
 });
-
-module.exports = function (context, cb) {
-    // TODO: Store in secrets
-    const secrets = {
-        clientId: 'BgPq4dvkYKOw6M3aFXFvy0sIhPeVzs45',
-        clientSecret: 'CI5vuR8OnrCuzbhLSF5JcUFbTYjCTWZQQZb_hWrqdSchxLx5jxo7OTMfWzI95waM'
-    };
-
-    const config = {
-        authEndpoint: 'https://test-xr4.auth0.com/oauth/token',
-        audience: 'https://test-xr4.auth0.com/api/v2/',
-        customConfigPlaceholder: '@@customConfig@@'
-    };
-
-    const managementApi = new ManagementApiClient(request, config.audience, null, config.customConfigPlaceholder);
-
-    const getAccessTokenPromise = getOAuthToken(config, secrets.clientId, secrets.clientSecret)
-        .then(response => {
-            managementApi.setAccessToken(response.access_token);
-        });
-
-    if (context.body) {
-        if (!context.body.hasOwnProperty('custom_login_page')) {
-            return cb('custom_login_page field is required');
-        }
-
-        context.body.custom_config = context.body.custom_config || {};
-
-        POST(cb, getAccessTokenPromise, managementApi, context.body.custom_login_page, context.body.custom_config);
-    } else {
-        GET(cb, getAccessTokenPromise, managementApi);
-    }
-};
 
 const getOAuthToken = (config, clientId, clientSecret) => {
     return request({
