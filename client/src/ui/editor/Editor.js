@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import CodeMirror from "react-codemirror";
-import {Button} from "@auth0/styleguide-react-components/lib/index";
+import {Button, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
 import Api from "../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
@@ -36,16 +36,23 @@ class Editor extends Component {
     render() {
         return (
             <div>
-                <CodeMirror className="editor"
-                            value={this.state.htmlValue}
-                            onChange={(value) => this.setState({htmlValue: value})}
-                            options={{
-                                mode: 'htmlmixed',
-                                lineNumbers: true
-                            }}
-                            key={this.props.editor.htmlEditor.key}
-                />
-                <Button onClick={this.onClick}>Save</Button>
+                <Tabs defaultActiveKey={1} id="uncontrolled-tabs">
+                    <Tab eventKey={1} title="Options">
+                        Options content
+                    </Tab>
+                    <Tab eventKey={2} title="Html">
+                        <CodeMirror className="editor"
+                                    value={this.state.htmlValue}
+                                    onChange={(value) => this.setState({htmlValue: value})}
+                                    options={{
+                                        mode: 'htmlmixed',
+                                        lineNumbers: true
+                                    }}
+                                    key={this.props.editor.htmlEditor.key}
+                        />
+                        <Button onClick={this.onClick}>Save</Button>
+                    </Tab>
+                </Tabs>
             </div>
         );
     }
