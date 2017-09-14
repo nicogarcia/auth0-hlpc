@@ -125,7 +125,7 @@ class ManagementApiClient {
 
         const stringifiedConfig = JSON.stringify(customConfig);
 
-        const serializedCustomConfig = Buffer.from(encodeURIComponent(stringifiedConfig), 'base64');
+        const serializedCustomConfig = Buffer.from(encodeURIComponent(stringifiedConfig)).toString('base64');
 
         return customLoginPage.replace(regex, serializedCustomConfig);
     }
