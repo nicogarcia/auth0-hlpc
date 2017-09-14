@@ -9,21 +9,32 @@ class Editor extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {htmlValue: null};
+        this.state = {htmlValue: null, selectedTab: 1};
     }
 
     componentDidMount() {
         const self = this;
 
         Api.getCustomLoginPage()
-            .then(action(customLoginPage => {
+            .then(customLoginPage => {
                 self.setState(state => ({htmlValue: customLoginPage}));
-
-                // Hack to make editor update its content
-                // https://github.com/JedWatson/react-codemirror/issues/106#issuecomment-318781325
-                self.props.editor.htmlEditor.key += 1;
-            }));
+                self.refreshHtmlEditor();
+            });
     }
+
+    refreshHtmlEditor = action(() => {
+        // Hack to make editor update its content
+        // https://github.com/JedWatson/react-codemirror/issues/106#issuecomment-318781325
+        this.props.editor.htmlEditor.key += 1;
+    });
+
+    handleSelect = (key) => {
+        this.setState({selectedTab: key});
+
+        // TODO: Ugly hack, please review
+        setTimeout(this.refreshHtmlEditor, 500);
+        //this.refreshHtmlEditor();
+    };
 
     onClick = () => {
         Api.setCustomLoginPage(this.state.htmlValue)
@@ -36,7 +47,8 @@ class Editor extends Component {
     render() {
         return (
             <div>
-                <Tabs defaultActiveKey={1} id="uncontrolled-tabs">
+                <h4>Editor</h4>
+                <Tabs activeKey={this.state.selectedTab} onSelect={this.handleSelect} id="editor-tabs">
                     <Tab eventKey={1} title="Options">
                         Options content
                     </Tab>
