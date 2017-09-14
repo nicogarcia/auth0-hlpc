@@ -28,7 +28,7 @@ class Editor extends Component {
         this.props.editor.htmlEditor.key += 1;
     });
 
-    handleSelect = (key) => {
+    handleTabSelect = (key) => {
         this.setState({selectedTab: key});
 
         // TODO: Ugly hack, please review
@@ -48,7 +48,7 @@ class Editor extends Component {
         return (
             <div>
                 <h4>Editor</h4>
-                <Tabs activeKey={this.state.selectedTab} onSelect={this.handleSelect} id="editor-tabs">
+                <Tabs activeKey={this.state.selectedTab} onSelect={this.handleTabSelect} id="editor-tabs">
                     <Tab eventKey={1} title="Options">
                         Options content
                     </Tab>
