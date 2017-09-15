@@ -8,8 +8,7 @@ class Api {
 
     getCustomLoginPage() {
         return this.fetchEndpoint('')
-            .then(res => res.json())
-            .then(json => json.custom_login_page);
+            .then(res => res.json());
     }
 
     setCustomLoginPage(customLoginPage, customConfig) {
