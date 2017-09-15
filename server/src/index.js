@@ -6,6 +6,13 @@ const bodyParser = require('body-parser');
 const server = Express();
 const request = require('request-promise');
 
+let defaultData = {
+    customLoginPage: require('./login_template'),
+    customConfig: {
+        theme: {}
+    }
+};
+
 module.exports = Webtask.fromExpress(server);
 
 // TODO: Store in secrets
@@ -42,8 +49,24 @@ server.get('/', (req, res) => {
 });
 
 server.post('/', (req, res) => {
+    if (!validateClientData(req.body)) {
+        res.status(400).json({error: 'custom_login_page and custom_config fields are required'});
+    }
 
+    const clientData = {customLoginPage: req.body.custom_login_page, customConfig: req.body.custom_config};
+
+    const newCustomLoginPage = mergeCustomLoginPageWithConfig(clientData.customLoginPage, clientData.customConfig);
+
+    req.managementApi.getGlobalClient()
+        .then(globalClient => req.managementApi.setCustomLoginPage(globalClient.client_id, newCustomLoginPage))
+        .then(() => setClientData(req.webtaskContext.storage, secrets.clientId, clientData))
+        .then(() => res.sendStatus(200))
+        .catch(onUnhandledError(res));
 });
+
+const validateClientData = (data) => {
+    return data.hasOwnProperty('custom_login_page') && data.hasOwnProperty('custom_config');
+};
 
 const getOAuthToken = (config, clientId, clientSecret) => {
     return request({
@@ -67,22 +90,11 @@ const onUnhandledError = (res) => {
     };
 };
 
-const POST = (cb, getAccessTokenPromise, managementApi, customLoginPageHtml, customConfig) => {
-    getAccessTokenPromise
-        .then(() => managementApi.getGlobalClient())
-        .then(globalClient =>
-            managementApi.setCustomLoginPage(globalClient.client_id, customLoginPageHtml, customConfig)
-        )
-        .then(response => cb(null, response))
-        .catch(onUnhandledError(cb));
-};
-
 const initialStore = () => ({clients: {}});
 
 const getClientData = (storage, clientId) => {
     return getStore(storage)
         .then(store => {
-            let defaultData = {customLoginPage: 'asdf', customConfig: {asdf: 'asdf'}};
             return store.clients[clientId] || defaultData;
         });
 };
@@ -90,6 +102,29 @@ const getClientData = (storage, clientId) => {
 const getStore = (storage) => {
     return Promise.promisify(storage.get)()
         .then(store => typeof store === 'undefined' ? initialStore() : store);
+};
+
+
+const setClientData = (storage, clientId, data) => {
+    return getStore(storage)
+        .then(store => {
+            store.clients[clientId] = data;
+            return setStore(store, storage);
+        });
+};
+
+const setStore = (store, storage) => {
+    return Promise.promisify(storage.set)(store);
+};
+
+const mergeCustomLoginPageWithConfig = (customLoginPage, customConfig) => {
+    const regex = new RegExp(config.customConfigPlaceholder);
+
+    const stringifiedConfig = JSON.stringify(customConfig);
+
+    const serializedCustomConfig = Buffer.from(encodeURIComponent(stringifiedConfig)).toString('base64');
+
+    return customLoginPage.replace(regex, serializedCustomConfig);
 };
 
 class ManagementApiClient {
@@ -127,16 +162,6 @@ class ManagementApiClient {
 
     setAccessToken(accessToken) {
         this.accessToken = accessToken;
-    }
-
-    mergeCustomLoginPageWithConfig(customLoginPage, customConfig) {
-        const regex = new RegExp(this.customConfigPlaceholder);
-
-        const stringifiedConfig = JSON.stringify(customConfig);
-
-        const serializedCustomConfig = Buffer.from(encodeURIComponent(stringifiedConfig)).toString('base64');
-
-        return customLoginPage.replace(regex, serializedCustomConfig);
     }
 
     findGlobalClient(clients) {
