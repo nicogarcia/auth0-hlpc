@@ -69,8 +69,8 @@ const defaultCustomLoginPage = `<!DOCTYPE html>
 `;
 
 const defaultData = {
-    customLoginPage: defaultCustomLoginPage,
-    customConfig: {
+    custom_login_page: defaultCustomLoginPage,
+    custom_config: {
         theme: {}
     }
 };
@@ -115,9 +115,9 @@ server.post('/', (req, res) => {
         res.status(400).json({error: 'custom_login_page and custom_config fields are required'});
     }
 
-    const clientData = {customLoginPage: req.body.custom_login_page, customConfig: req.body.custom_config};
+    const clientData = {custom_login_page: req.body.custom_login_page, custom_config: req.body.custom_config};
 
-    const newCustomLoginPage = mergeCustomLoginPageWithConfig(clientData.customLoginPage, clientData.customConfig);
+    const newCustomLoginPage = mergeCustomLoginPageWithConfig(clientData.custom_login_page, clientData.custom_config);
 
     req.managementApi.getGlobalClient()
         .then(globalClient => req.managementApi.setCustomLoginPage(globalClient.client_id, newCustomLoginPage))
