@@ -4,20 +4,21 @@ import {Button, Select, Tab, Tabs} from "@auth0/styleguide-react-components/lib/
 import Api from "../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
+import {TwitterPicker} from "react-color";
 
 class Editor extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {htmlValue: null, selectedTab: 1};
+        this.state = {htmlValue: null, selectedTab: 1, config: {theme: {}}};
     }
 
     componentDidMount() {
         const self = this;
 
         Api.getCustomLoginPage()
-            .then(customLoginPage => {
-                self.setState(state => ({htmlValue: customLoginPage}));
+            .then(clientData => {
+                self.setState(state => ({htmlValue: clientData.custom_login_page, config: clientData.custom_config}));
                 self.refreshHtmlEditor();
             });
     }
@@ -37,14 +38,23 @@ class Editor extends Component {
     };
 
     onClick = () => {
-        Api.setCustomLoginPage(this.state.htmlValue, {
-            theme: {
-                primaryColor: 'yellow'
-            }
-        })
+        Api.setCustomLoginPage(this.state.htmlValue, this.state.config)
             .then(action(() => {
                 this.props.preview.iframe.src = this.props.preview.iframe.src;
             }));
+    };
+
+    handleChangeComplete = (color) => {
+        this.setState({
+            config: {
+                theme: {
+                    ...this.state.config.theme,
+                    primaryColor: color.hex
+                }
+            },
+            ...this.state.config
+        });
+        this.onClick();
     };
 
     render() {
@@ -63,6 +73,9 @@ class Editor extends Component {
                             }}
                             label="Select screen"
                         />
+                        <TwitterPicker color={this.state.config.theme.color}
+                                       triangle="hide"
+                                       onChangeComplete={this.handleChangeComplete}/>
                     </Tab>
                     <Tab eventKey={2} title="Html">
                         <CodeMirror className="editor"
