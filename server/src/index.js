@@ -162,7 +162,18 @@ const getClientData = (storage, clientId) => {
 };
 
 const getStore = (storage) => {
-    return Promise.promisify(storage.get)()
+    const promise = new Promise((resolve, reject) => {
+        storage.get((err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            resolve(data);
+        });
+    });
+
+    return promise
         .then(store => typeof store === 'undefined' ? initialStore() : store);
 };
 
@@ -176,7 +187,16 @@ const setClientData = (storage, clientId, data) => {
 };
 
 const setStore = (store, storage) => {
-    return Promise.promisify(storage.set)(store);
+    return new Promise((resolve, reject) => {
+        storage.set(store, (err) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            resolve();
+        });
+    });
 };
 
 const mergeCustomLoginPageWithConfig = (customLoginPage, customConfig) => {
