@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import CodeMirror from "react-codemirror";
-import {Button, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
+import {Button, Select, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
 import Api from "../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
@@ -37,8 +37,11 @@ class Editor extends Component {
     };
 
     onClick = () => {
-        Api.setCustomLoginPage(this.state.htmlValue)
-            .then(console.log)
+        Api.setCustomLoginPage(this.state.htmlValue, {
+            theme: {
+                primaryColor: 'yellow'
+            }
+        })
             .then(action(() => {
                 this.props.preview.iframe.src = this.props.preview.iframe.src;
             }));
@@ -50,7 +53,16 @@ class Editor extends Component {
                 <h4>Editor</h4>
                 <Tabs activeKey={this.state.selectedTab} onSelect={this.handleTabSelect} id="editor-tabs">
                     <Tab eventKey={1} title="Options">
-                        Options content
+                        <Select
+                            options={[
+                                {label: 'All', value: 'all'},
+                                {label: 'Login', value: 'login'}
+                            ]}
+                            selected={0}
+                            handleChange={() => {
+                            }}
+                            label="Select screen"
+                        />
                     </Tab>
                     <Tab eventKey={2} title="Html">
                         <CodeMirror className="editor"

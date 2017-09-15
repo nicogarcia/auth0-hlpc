@@ -19,7 +19,7 @@ class Api {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({custom_login_page: customLoginPage, custom_config: customConfig})
-        }).then(res => res.json());
+        });
     }
 
     fetchEndpoint(endpoint, options) {
