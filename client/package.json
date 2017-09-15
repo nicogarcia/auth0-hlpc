@@ -11,6 +11,7 @@
     "react": "^15.6.1",
     "react-bootstrap": "^0.30.10",
     "react-codemirror": "^1.0.0",
+    "react-color": "^2.13.8",
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.13"
   },
