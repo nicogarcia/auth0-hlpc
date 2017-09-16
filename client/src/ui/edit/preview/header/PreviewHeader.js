@@ -1,5 +1,4 @@
 import React from "react";
-import "./PreviewHeader.css";
 import {Button, Col} from "@auth0/styleguide-react-components/lib/index";
 import {observer} from "mobx-react";
 import PropTypes from "prop-types";

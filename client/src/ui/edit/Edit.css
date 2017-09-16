@@ -1,0 +1,34 @@
+.Edit__header {
+    height: 48px;
+    width: 100%;
+    padding: 5 2em;
+}
+
+.Edit__content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: 48px;
+}
+
+.Edit__preview-wrapper {
+    width: 100%;
+    height: 100%;
+    padding-right: 400px;
+}
+
+.Edit__preview-wrapper_expanded {
+    width: 100%;
+    height: 100%;
+    padding-right: 0;
+}
+
+.Edit__editor-wrapper {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    width: 400px;
+}

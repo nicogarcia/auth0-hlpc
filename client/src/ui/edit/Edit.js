@@ -1,11 +1,12 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Editor from "./editor/Editor";
-import {Col, Grid, Row} from "@auth0/styleguide-react-components/lib/index";
+import { Col, Grid, Row } from "@auth0/styleguide-react-components/lib/index";
 import Preview from "./preview/Preview";
 import PreviewHeader from "./preview/header/PreviewHeader";
-import {observer, PropTypes as mobxPropTypes} from "mobx-react";
-import {action} from "mobx";
+import { observer, PropTypes as mobxPropTypes } from "mobx-react";
+import { action } from "mobx";
 import config from "../../config";
+import './Edit.css';
 
 class Edit extends Component {
 
@@ -25,26 +26,22 @@ class Edit extends Component {
 
     render() {
         return (
-            <div className="App">
-                <Grid fluid={true} className="container-grid p-0">
-                    <Row>
-                        <Col xs={12}>
-                            <PreviewHeader editorCollapsed={this.props.editor.collapsed}
-                                           loginPageUrl={this.loginPageUrl}
-                                           onToggleEditor={this.onToggleEditor}
-                            />
-                        </Col>
-                    </Row>
-                    <Row className="m-0">
-                        <Col xs={this.props.editor.collapsed ? 12 : 8} className="p-0">
-                            <Preview loginPageUrl={this.loginPageUrl} preview={this.props.preview}/>
-                        </Col>
+            <div className="Edit">
+                <div className="Edit__header">
+                    <PreviewHeader editorCollapsed={this.props.editor.collapsed}
+                        loginPageUrl={this.loginPageUrl}
+                        onToggleEditor={this.onToggleEditor}
+                    />
+                </div>
+                <div className="Edit__content">
+                    <div className={`Edit__preview-wrapper${this.props.editor.collapsed ? '_expanded' : ''}`}>
+                        <Preview loginPageUrl={this.loginPageUrl} preview={this.props.preview} />
+                    </div>
 
-                        <Col xs={4} hidden={this.props.editor.collapsed} className="p-0">
-                            <Editor editor={this.props.editor} preview={this.props.preview}/>
-                        </Col>
-                    </Row>
-                </Grid>
+                    <div hidden={this.props.editor.collapsed} className="Edit__editor-wrapper">
+                        <Editor editor={this.props.editor} preview={this.props.preview} />
+                    </div>
+                </div>
             </div>
         );
     }
