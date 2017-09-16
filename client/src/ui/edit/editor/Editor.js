@@ -5,6 +5,7 @@ import Api from "../../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
 import {TwitterPicker} from "react-color";
+import './Editor.css';
 
 class Editor extends Component {
     constructor(props) {
@@ -59,8 +60,7 @@ class Editor extends Component {
 
     render() {
         return (
-            <div>
-                <h4>Editor</h4>
+            <div className="Editor">
                 <Tabs activeKey={this.state.selectedTab} onSelect={this.handleTabSelect} id="editor-tabs">
                     <Tab eventKey={1} title="Options">
                         <Select
