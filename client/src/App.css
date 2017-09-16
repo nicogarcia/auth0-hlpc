@@ -6,3 +6,10 @@
 .editor > .CodeMirror {
     height: 80vh;
 }
+
+.container-grid {
+    overflow-x: hidden;
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+}

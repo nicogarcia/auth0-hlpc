@@ -8,20 +8,23 @@ import Col from "react-bootstrap/es/Col";
 import Editor from "./ui/editor/Editor";
 import Preview from "./ui/preview/Preview";
 import {observer, PropTypes} from "mobx-react";
+import {Grid, Row} from "@auth0/styleguide-react-components/lib/index";
 
 class App extends Component {
     render() {
         return (
             <div className="App">
-                <div className="container-fluid">
-                    <Col xs={4} hidden={this.props.store.editor.collapsed}>
-                        <Editor editor={this.props.store.editor} preview={this.props.store.preview}/>
-                    </Col>
+                <Grid fluid={true} className="container-grid p-0">
+                    <Row>
+                        <Col xs={this.props.store.editor.collapsed ? 12 : 8}>
+                            <Preview editor={this.props.store.editor} preview={this.props.store.preview}/>
+                        </Col>
 
-                    <Col xs={this.props.store.editor.collapsed ? 12 : 8}>
-                        <Preview editor={this.props.store.editor} preview={this.props.store.preview}/>
-                    </Col>
-                </div>
+                        <Col xs={4} hidden={this.props.store.editor.collapsed}>
+                            <Editor editor={this.props.store.editor} preview={this.props.store.preview}/>
+                        </Col>
+                    </Row>
+                </Grid>
             </div>
         );
     }
