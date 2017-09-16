@@ -1,12 +1,11 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Editor from "./editor/Editor";
-import { Col, Grid, Row } from "@auth0/styleguide-react-components/lib/index";
 import Preview from "./preview/Preview";
-import PreviewHeader from "./preview/header/PreviewHeader";
-import { observer, PropTypes as mobxPropTypes } from "mobx-react";
-import { action } from "mobx";
+import PreviewHeader from "./header/EditHeader";
+import {observer, PropTypes as mobxPropTypes} from "mobx-react";
+import {action} from "mobx";
 import config from "../../config";
-import './Edit.css';
+import "./Edit.css";
 
 class Edit extends Component {
 
