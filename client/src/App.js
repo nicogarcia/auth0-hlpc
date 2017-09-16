@@ -41,12 +41,12 @@ class App extends Component {
                             />
                         </Col>
                     </Row>
-                    <Row>
-                        <Col xs={this.props.store.editor.collapsed ? 12 : 8}>
+                    <Row className="m-0">
+                        <Col xs={this.props.store.editor.collapsed ? 12 : 8} className="p-0">
                             <Preview loginPageUrl={this.loginPageUrl} preview={this.props.store.preview}/>
                         </Col>
 
-                        <Col xs={4} hidden={this.props.store.editor.collapsed}>
+                        <Col xs={4} hidden={this.props.store.editor.collapsed} className="p-0">
                             <Editor editor={this.props.store.editor} preview={this.props.store.preview}/>
                         </Col>
                     </Row>
