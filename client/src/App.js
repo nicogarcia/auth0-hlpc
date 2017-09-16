@@ -29,7 +29,8 @@ class App extends Component {
                     </Route>
 
                     <Route path="/edit" render={() => (
-                        <Edit editor={this.props.store.editor} preview={this.props.store.preview}/>
+                        <Edit editor={this.props.store.editor}
+                              preview={this.props.store.preview}/>
                     )}/>
                 </Switch>
             </Router>

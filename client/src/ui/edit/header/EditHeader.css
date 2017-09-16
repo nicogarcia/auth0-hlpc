@@ -1,0 +1,18 @@
+.EditHeader {
+    background-color: #16214D;
+    padding: 0 20px;
+    height: 100%;
+}
+
+.EditHeader__title {
+    float: left;
+}
+
+.EditHeader__actions {
+    float: right;
+    margin: 7px 15px;
+}
+
+.EditHeader__actions Button {
+    margin: 0 15px;
+}

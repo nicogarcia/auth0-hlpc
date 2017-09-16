@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Editor from "./editor/Editor";
 import Preview from "./preview/Preview";
-import PreviewHeader from "./header/EditHeader";
+import EditHeader from "./header/EditHeader";
 import {observer, PropTypes as mobxPropTypes} from "mobx-react";
 import {action} from "mobx";
 import config from "../../config";
@@ -25,11 +25,11 @@ class Edit extends Component {
 
     render() {
         return (
-            <div className="Edit">
+            <div className="Edit theme-dark">
                 <div className="Edit__header">
-                    <PreviewHeader editorCollapsed={this.props.editor.collapsed}
-                        loginPageUrl={this.loginPageUrl}
-                        onToggleEditor={this.onToggleEditor}
+                    <EditHeader editorCollapsed={this.props.editor.collapsed}
+                                loginPageUrl={this.loginPageUrl}
+                                onToggleEditor={this.onToggleEditor}
                     />
                 </div>
                 <div className="Edit__content">

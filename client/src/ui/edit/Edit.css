@@ -1,7 +1,6 @@
 .Edit__header {
-    height: 48px;
+    height: 56px;
     width: 100%;
-    padding: 5 2em;
 }
 
 .Edit__content {
@@ -10,7 +9,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    margin-top: 48px;
+    margin-top: 56px;
 }
 
 .Edit__preview-wrapper {
