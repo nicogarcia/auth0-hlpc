@@ -25,7 +25,7 @@ class Edit extends Component {
 
     render() {
         return (
-            <div className="Edit theme-dark">
+            <div className="Edit">
                 <div className="Edit__header">
                     <EditHeader editorCollapsed={this.props.editor.collapsed}
                                 loginPageUrl={this.loginPageUrl}
