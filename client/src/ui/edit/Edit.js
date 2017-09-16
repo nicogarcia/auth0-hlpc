@@ -34,11 +34,11 @@ class Edit extends Component {
                 </div>
                 <div className="Edit__content">
                     <div className={`Edit__preview-wrapper${this.props.editor.collapsed ? '_expanded' : ''}`}>
-                        <Preview loginPageUrl={this.loginPageUrl} preview={this.props.preview} />
+                        <Preview loginPageUrl={this.loginPageUrl} preview={this.props.preview}/>
                     </div>
 
                     <div hidden={this.props.editor.collapsed} className="Edit__editor-wrapper">
-                        <Editor editor={this.props.editor} preview={this.props.preview} />
+                        <Editor editor={this.props.editor} preview={this.props.preview}/>
                     </div>
                 </div>
             </div>

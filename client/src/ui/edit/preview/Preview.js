@@ -1,10 +1,9 @@
 import React from "react";
-import { observer, PropTypes as mboxPropTypes } from "mobx-react";
-import { action } from "mobx";
+import {observer, PropTypes as mboxPropTypes} from "mobx-react";
 import PropTypes from "prop-types";
-import './Preview.css';
+import "./Preview.css";
 
-const Preview = ({ loginPageUrl, preview }) => (
+const Preview = ({loginPageUrl, preview}) => (
     <iframe
         id="custom-login-page-preview"
         ref={iframe => {

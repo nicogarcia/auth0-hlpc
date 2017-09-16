@@ -5,7 +5,7 @@ import Api from "../../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
 import {TwitterPicker} from "react-color";
-import './Editor.css';
+import "./Editor.css";
 
 class Editor extends Component {
     constructor(props) {
