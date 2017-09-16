@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import CodeMirror from "react-codemirror";
 import {Button, Select, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
-import Api from "../../api";
+import Api from "../../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
 import {TwitterPicker} from "react-color";
