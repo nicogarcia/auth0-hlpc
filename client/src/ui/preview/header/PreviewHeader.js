@@ -12,9 +12,9 @@ const PreviewHeader = ({editorCollapsed, loginPageUrl, onToggleEditor}) => {
             </h4>
             <div className="pull-right">
                 <Button onClick={onToggleEditor}>
-                    {editorCollapsed ? 'Open Editor' : 'Close editor'}
+                    {editorCollapsed ? 'Edit' : 'Close editor'}
                 </Button>
-                <Button href={loginPageUrl} target="_blank">Open live version</Button>
+                <Button href={loginPageUrl} bsStyle="success" target="_blank">Open live version</Button>
             </div>
         </div>
     );
