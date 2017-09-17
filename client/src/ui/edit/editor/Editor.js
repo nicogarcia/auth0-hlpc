@@ -1,17 +1,18 @@
 import React, {Component} from "react";
-import {Select, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
+import {Button, Col, Form, FormGroup, Select, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
 import Api from "../../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
 import {TwitterPicker} from "react-color";
 import "./Editor.css";
 import EditorHtml from "./html/EditorHtml";
+import {ControlLabel} from "react-bootstrap";
 
 class Editor extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {htmlValue: '', selectedTab: 1, config: {theme: {}}};
+        this.state = {htmlValue: '', selectedTab: 1, config: {theme: {}}, hidden: true, position: {x: 0, y: 0}};
     }
 
     componentDidMount() {
@@ -48,11 +49,11 @@ class Editor extends Component {
     handleChangeComplete = (color) => {
         this.setState({
             config: {
+                ...this.state.config,
                 theme: {
                     ...this.state.config.theme,
                     primaryColor: color.hex
-                },
-                ...this.state.config
+                }
             }
         });
         this.saveHtml(this.state.htmlValue, this.state.config);
@@ -73,7 +74,7 @@ class Editor extends Component {
                     <Tab className="Editor__tab" eventKey={1} title="Options">
                         <Select
                             options={[
-                                {label: 'All', value: 'all'},
+                                {label: 'Global settings', value: 'all'},
                                 {label: 'Login', value: 'login'}
                             ]}
                             selected={0}
@@ -81,9 +82,39 @@ class Editor extends Component {
                             }}
                             label="Select screen"
                         />
-                        <TwitterPicker color={this.state.config.theme.color}
-                                       triangle="hide"
-                                       onChangeComplete={this.handleChangeComplete}/>
+                        <Form horizontal>
+                            <FormGroup>
+                                <Col componentClass={ControlLabel} xs={7}>
+                                    Primary color
+                                </Col>
+                                <Col xs={5}>
+                                    <Button className="Editor__color-picker"
+                                            style={{'background': this.state.config.theme.primaryColor}}
+                                            onClick={(e) => {
+                                                const rect = e.target.getBoundingClientRect();
+
+                                                this.setState({
+                                                    hidden: !this.state.hidden,
+                                                    position: {x: window.innerWidth - rect.right, y: rect.bottom}
+                                                })
+                                            }}
+                                    >
+                                    </Button>
+                                    {
+                                        !this.state.hidden &&
+                                        <div className="Editor__color-picker-cover"
+                                             onClick={() => this.setState({hidden: true})}>
+                                            <div className="Editor__color-picker-popover"
+                                                 style={{right: this.state.position.x, top: this.state.position.y}}>
+                                                <TwitterPicker color={this.state.config.theme.primaryColor}
+                                                               triangle="top-right"
+                                                               onChangeComplete={this.handleChangeComplete}/>
+                                            </div>
+                                        </div>
+                                    }
+                                </Col>
+                            </FormGroup>
+                        </Form>
                     </Tab>
 
                     <Tab className="Editor__tab" eventKey={2} title="Html">
