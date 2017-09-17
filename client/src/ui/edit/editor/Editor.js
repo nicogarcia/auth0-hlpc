@@ -69,8 +69,8 @@ class Editor extends Component {
     render() {
         return (
             <div className="Editor">
-                <Tabs activeKey={this.state.selectedTab} onSelect={this.handleTabSelect} id="editor-tabs">
-                    <Tab eventKey={1} title="Options">
+                <Tabs id="editor-tabs" activeKey={this.state.selectedTab} onSelect={this.handleTabSelect}>
+                    <Tab className="Editor__tab" eventKey={1} title="Options">
                         <Select
                             options={[
                                 {label: 'All', value: 'all'},
@@ -86,7 +86,7 @@ class Editor extends Component {
                                        onChangeComplete={this.handleChangeComplete}/>
                     </Tab>
 
-                    <Tab eventKey={2} title="Html">
+                    <Tab className="Editor__tab" eventKey={2} title="Html">
                         <EditorHtml htmlValue={this.state.htmlValue}
                                     onChange={this.onHtmlCodeChange}
                                     onSave={this.onHtmlSave}
