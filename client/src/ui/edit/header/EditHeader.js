@@ -8,7 +8,7 @@ const EditHeader = ({editorCollapsed, loginPageUrl, onToggleEditor}) => {
     return (
         <div className="EditHeader">
             <h4 className="EditHeader__title">
-                Current Login Page
+                Current Login Page Preview
             </h4>
             <div className="EditHeader__actions">
                 <Button onClick={onToggleEditor}>
