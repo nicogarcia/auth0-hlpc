@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import "codemirror/lib/codemirror.css";
+import "codemirror/addon/display/fullscreen.css";
+import "codemirror/addon/display/fullscreen";
 import {observable, useStrict} from "mobx";
 
 import App from "./App";
