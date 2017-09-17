@@ -51,9 +51,9 @@ class Editor extends Component {
                 theme: {
                     ...this.state.config.theme,
                     primaryColor: color.hex
-                }
-            },
-            ...this.state.config
+                },
+                ...this.state.config
+            }
         });
         this.onClick();
     };
