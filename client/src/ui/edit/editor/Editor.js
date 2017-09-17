@@ -1,17 +1,17 @@
 import React, {Component} from "react";
-import CodeMirror from "react-codemirror";
-import {Button, Select, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
+import {Select, Tab, Tabs} from "@auth0/styleguide-react-components/lib/index";
 import Api from "../../../api";
 import {observer, PropTypes} from "mobx-react";
 import {action} from "mobx";
 import {TwitterPicker} from "react-color";
 import "./Editor.css";
+import EditorHtml from "./html/EditorHtml";
 
 class Editor extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {htmlValue: null, selectedTab: 1, config: {theme: {}}};
+        this.state = {htmlValue: '', selectedTab: 1, config: {theme: {}}};
     }
 
     componentDidMount() {
@@ -38,8 +38,8 @@ class Editor extends Component {
         //this.refreshHtmlEditor();
     };
 
-    onClick = () => {
-        Api.setCustomLoginPage(this.state.htmlValue, this.state.config)
+    saveHtml = (html, config) => {
+        Api.setCustomLoginPage(html, config)
             .then(action(() => {
                 this.props.preview.iframe.src = this.props.preview.iframe.src;
             }));
@@ -55,7 +55,15 @@ class Editor extends Component {
                 ...this.state.config
             }
         });
-        this.onClick();
+        this.saveHtml(this.state.htmlValue, this.state.config);
+    };
+
+    onHtmlSave = () => {
+        this.saveHtml(this.state.htmlValue, this.state.config);
+    };
+
+    onHtmlCodeChange = (value) => {
+        this.setState({htmlValue: value})
     };
 
     render() {
@@ -77,17 +85,13 @@ class Editor extends Component {
                                        triangle="hide"
                                        onChangeComplete={this.handleChangeComplete}/>
                     </Tab>
+
                     <Tab eventKey={2} title="Html">
-                        <CodeMirror className="editor"
-                                    value={this.state.htmlValue}
-                                    onChange={(value) => this.setState({htmlValue: value})}
-                                    options={{
-                                        mode: 'htmlmixed',
-                                        lineNumbers: true
-                                    }}
-                                    key={this.props.editor.htmlEditor.key}
+                        <EditorHtml htmlValue={this.state.htmlValue}
+                                    onChange={this.onHtmlCodeChange}
+                                    onSave={this.onHtmlSave}
+                                    codeMirrorKey={this.props.editor.htmlEditor.key}
                         />
-                        <Button onClick={this.onClick}>Save</Button>
                     </Tab>
                 </Tabs>
             </div>
