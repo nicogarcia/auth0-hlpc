@@ -142,7 +142,7 @@ const getOAuthToken = (config, clientId, clientSecret) => {
 
 const onUnhandledError = (res) => {
     return err => {
-        res.status(500).json({error: err.error});
+        res.status(500).json(err.error);
     };
 };
 
