@@ -26,3 +26,28 @@ Live demo: [HLP Configurator](https://auth0-hlpc.firebaseapp.com) (works with fi
   > 1) Read the reasons to insert client credentials (client_id/client_secret) in the shown form
   > 1) Fill client_id
   > 1) Fill client_secret
+
+## Known issues
+- There's only one setting to customize (widget's primary color).
+  
+  **Reason:** This is part of the narrowing of the excercise to fit the time constraints.
+  
+  **Note:** There are many settings that are not currently available in Auth0 Lock as a config option.
+  
+  **Solution:** Maybe the best solution for this is to wait for the options to be added, otherwise, another way could be overriding of the Lock's css classes.
+- No customer authentication is being made.
+
+  **Reason:** At first, it was decided to use fixed credentials to avoid dealing early with the authentication mechanisms, then it was assumed as a commitment to ask the customer for the credentials and use them from the backend, but that idea was discarded to avoid spending time in developing a feature that's against security principles like not sharing id tokens. Instead, it was tried to add a consent screen for the user to give authorization to the application, but given the lack of understanding of the process, redirection technical issues and lack of documentation, that feature couldn't be worked out in time.
+  
+  **Solution:** Get help to solve the redirection problems and make sure this process is valid, otherwise, get help to solve extension code not updating in dashboard after reinstalling.
+- Code editor doesn't fill its parent
+
+  **Reason:** It couldn't be made the proper styling to solve that issue.
+  
+  **Solution:** Get help from a designer.
+- Code and can't be reset to initial value.
+
+  **Reason:** Feature didn't fit in time constraints.
+  
+  **Solution:** Create and endpoint and return already existing default html code and settings, add a reset button to both html and settings tab with a reset confirm dialog.
+  
