@@ -77,12 +77,6 @@ const defaultData = {
 
 module.exports = Webtask.fromExpress(server);
 
-// TODO: Store in secrets
-const secrets = {
-    clientId: 'BgPq4dvkYKOw6M3aFXFvy0sIhPeVzs45',
-    clientSecret: 'CI5vuR8OnrCuzbhLSF5JcUFbTYjCTWZQQZb_hWrqdSchxLx5jxo7OTMfWzI95waM'
-};
-
 const config = {
     authEndpoint: 'https://test-xr4.auth0.com/oauth/token',
     audience: 'https://test-xr4.auth0.com/api/v2/',
@@ -94,7 +88,7 @@ server.use(bodyParser.json());
 server.use((req, res, next) => {
     req.managementApi = new ManagementApiClient(request, config.audience, null, config.customConfigPlaceholder);
 
-    getOAuthToken(config, secrets.clientId, secrets.clientSecret)
+    getOAuthToken(config, req.webtaskContext.secrets.clientId, req.webtaskContext.secrets.clientSecret)
         .then(response => {
             req.managementApi.setAccessToken(response.access_token);
             next();
@@ -103,7 +97,7 @@ server.use((req, res, next) => {
 });
 
 server.get('/', (req, res) => {
-    getClientData(req.webtaskContext.storage, secrets.clientId)
+    getClientData(req.webtaskContext.storage, req.webtaskContext.secrets.clientId)
         .then(clientData => {
             return res.json(clientData);
         })
@@ -121,7 +115,7 @@ server.post('/', (req, res) => {
 
     req.managementApi.getGlobalClient()
         .then(globalClient => req.managementApi.setCustomLoginPage(globalClient.client_id, newCustomLoginPage))
-        .then(() => setClientData(req.webtaskContext.storage, secrets.clientId, clientData))
+        .then(() => setClientData(req.webtaskContext.storage, req.webtaskContext.secrets.clientId, clientData))
         .then(() => res.sendStatus(200))
         .catch(onUnhandledError(res));
 });
@@ -148,7 +142,7 @@ const getOAuthToken = (config, clientId, clientSecret) => {
 
 const onUnhandledError = (res) => {
     return err => {
-        res.status(500).json({error: err});
+        res.status(500).json({error: err.error});
     };
 };
 
