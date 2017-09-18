@@ -27,6 +27,10 @@ Live demo: [HLP Configurator](https://auth0-hlpc.firebaseapp.com) (works with fi
   > 1) Fill client_id
   > 1) Fill client_secret
 
+## How it works
+This application has a backend made with Express that runs on Webtask and a frontend made with React mostly following the Auth0 Styleguide.
+The customization is worked out by putting a placeholder in the default html code and sending it to the UI together with the default custom configuration. The UI shows this code and configuration and updates and sends them in case of user interaction. Then the backend serializes the configuration into a Base64 encoded string, inserts that in the early mentioned placeholder and send it to Auth0 through the Management API. When the frontend receives the successful response, it reloads the preview that displays the real login screen.
+
 ## Known issues
 - There's only one setting to customize (widget's primary color).
   
@@ -51,3 +55,8 @@ Live demo: [HLP Configurator](https://auth0-hlpc.firebaseapp.com) (works with fi
   
   **Solution:** Create and endpoint and return already existing default html code and settings, add a reset button to both html and settings tab with a reset confirm dialog.
   
+- Backend is not caching neither global client id nor access tokens.
+
+  **Reason:** Feature didn't fit in time constraints.
+  
+  **Solution:** Add temporary caching of to reduce Management API calls and make preview reloading faster.
