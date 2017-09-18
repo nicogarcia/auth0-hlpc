@@ -9,11 +9,11 @@ const Welcome = () => (
     <div className="Welcome">
         <div className="Welcome__title-wrapper">
             <h1>Welcome to the Hosted Login Page Editor</h1>
-            <h5>
+            <p className="Welcome__description">
                 This tool will let you edit with just a few clicks the
                 page that your users will see when you
-                redirect them to Auth0 Hosted Login Page.
-            </h5>
+                redirect them to your Hosted Login Page.
+            </p>
 
             <Link to="/edit">
                 <Button bsStyle="success">Continue</Button>
