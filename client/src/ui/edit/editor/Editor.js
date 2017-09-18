@@ -7,12 +7,22 @@ import {TwitterPicker} from "react-color";
 import "./Editor.css";
 import EditorHtml from "./html/EditorHtml";
 import {ControlLabel} from "react-bootstrap";
+import update from "immutability-helper";
 
 class Editor extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {htmlValue: '', selectedTab: 1, config: {theme: {}}, hidden: true, position: {x: 0, y: 0}};
+        this.state = {
+            htmlValue: '',
+            selectedTab: 1,
+            config: {theme: {}},
+            settings: {
+                primaryColor: {
+                    pickerHidden: true
+                }
+            }
+        };
     }
 
     componentDidMount() {
@@ -20,7 +30,9 @@ class Editor extends Component {
 
         Api.getCustomLoginPage()
             .then(clientData => {
-                self.setState(state => ({htmlValue: clientData.custom_login_page, config: clientData.custom_config}));
+                self.setState(state => (
+                    {htmlValue: clientData.custom_login_page, config: clientData.custom_config})
+                );
                 self.refreshHtmlEditor();
             });
     }
@@ -40,23 +52,29 @@ class Editor extends Component {
     };
 
     saveHtml = (html, config) => {
-        Api.setCustomLoginPage(html, config)
+        return Api.setCustomLoginPage(html, config)
             .then(action(() => {
                 this.props.preview.iframe.src = this.props.preview.iframe.src;
             }));
     };
 
-    handleChangeComplete = (color) => {
-        this.setState({
-            config: {
-                ...this.state.config,
-                theme: {
-                    ...this.state.config.theme,
-                    primaryColor: color.hex
-                }
-            }
-        });
-        this.saveHtml(this.state.htmlValue, this.state.config);
+    handleChangeComplete = (color, setting) => {
+        this.setState(update(this.state, {
+            config: {theme: {primaryColor: {$set: color.hex}}},
+            settings: {[setting]: {saved: {$set: 'Saving...'}}}
+        }));
+
+        this.saveHtml(this.state.htmlValue, this.state.config)
+            .then(() => {
+                this.setState(update(this.state, {
+                    config: {theme: {primaryColor: {$set: color.hex}}},
+                    settings: {[setting]: {saved: {$set: 'Saved!'}}}
+                }));
+
+                setTimeout(() => this.setState(update(this.state, {
+                    settings: {[setting]: {saved: {$set: false}}}
+                })), 1500);
+            });
     };
 
     onHtmlSave = () => {
@@ -67,11 +85,37 @@ class Editor extends Component {
         this.setState({htmlValue: value})
     };
 
+    handleTogglePickerClick = (e, setting) => {
+        const rect = e.target.getBoundingClientRect();
+
+        this.setState(update(this.state, {
+            settings: {
+                [setting]: {
+                    $merge: {
+                        pickerHidden: update(this.state.settings[setting], {$apply: x => !x}),
+                        position: {
+                            x: window.innerWidth - rect.right,
+                            y: rect.bottom
+                        }
+                    }
+                }
+            }
+        }));
+    };
+
+    handleClosePickerClick = (setting) => {
+        this.setState(update(this.state, {
+            settings: {
+                [setting]: {pickerHidden: {$set: true}}
+            }
+        }))
+    };
+
     render() {
         return (
             <div className="Editor">
                 <Tabs id="editor-tabs" activeKey={this.state.selectedTab} onSelect={this.handleTabSelect}>
-                    <Tab className="Editor__tab" eventKey={1} title="Options">
+                    <Tab className="Editor__tab" eventKey={1} title="Settings">
                         <Select
                             options={[
                                 {label: 'Global settings', value: 'all'},
@@ -86,29 +130,33 @@ class Editor extends Component {
                             <FormGroup>
                                 <Col componentClass={ControlLabel} xs={7}>
                                     Primary color
+                                    {
+                                        this.state.settings.primaryColor &&
+                                        this.state.settings.primaryColor.saved &&
+                                        <div className="Editor__setting-saved_success">
+                                            {this.state.settings.primaryColor.saved}
+                                        </div>
+                                    }
                                 </Col>
                                 <Col xs={5}>
                                     <Button className="Editor__color-picker"
                                             style={{'background': this.state.config.theme.primaryColor}}
-                                            onClick={(e) => {
-                                                const rect = e.target.getBoundingClientRect();
-
-                                                this.setState({
-                                                    hidden: !this.state.hidden,
-                                                    position: {x: window.innerWidth - rect.right, y: rect.bottom}
-                                                })
-                                            }}
-                                    >
+                                            onClick={(e) => this.handleTogglePickerClick(e, 'primaryColor')}>
                                     </Button>
                                     {
-                                        !this.state.hidden &&
+                                        !this.state.settings.primaryColor.pickerHidden &&
                                         <div className="Editor__color-picker-cover"
-                                             onClick={() => this.setState({hidden: true})}>
+                                             onClick={(e) => this.handleClosePickerClick('primaryColor')}>
                                             <div className="Editor__color-picker-popover"
-                                                 style={{right: this.state.position.x, top: this.state.position.y}}>
+                                                 style={{
+                                                     right: this.state.settings.primaryColor.position.x,
+                                                     top: this.state.settings.primaryColor.position.y
+                                                 }}>
                                                 <TwitterPicker color={this.state.config.theme.primaryColor}
                                                                triangle="top-right"
-                                                               onChangeComplete={this.handleChangeComplete}/>
+                                                               onChangeComplete={(color) => {
+                                                                   this.handleChangeComplete(color, 'primaryColor')
+                                                               }}/>
                                             </div>
                                         </div>
                                     }

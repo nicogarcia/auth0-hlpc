@@ -41,3 +41,7 @@
     bottom: 0;
     left: 0;
 }
+
+.Editor__setting-saved_success {
+    color: green;
+}
