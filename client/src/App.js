@@ -8,6 +8,7 @@ import {observer, PropTypes} from "mobx-react";
 import config from "./config";
 import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import Edit from "./ui/edit/Edit";
+import Welcome from "./ui/welcome/Welcome";
 
 class App extends Component {
 
@@ -21,12 +22,7 @@ class App extends Component {
         return (
             <Router>
                 <Switch>
-                    <Route exact path="/">
-                        <div>
-                            Welcome
-                            <Link to="/edit">Continue</Link>
-                        </div>
-                    </Route>
+                    <Route exact path="/" component={Welcome}/>
 
                     <Route path="/edit" render={() => (
                         <Edit editor={this.props.store.editor}

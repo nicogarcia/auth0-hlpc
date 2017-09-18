@@ -1,0 +1,23 @@
+.Welcome {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.Welcome__title-wrapper {
+    text-align: center;
+}
+
+.Welcome__image-wrapper {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: 10px;
+}
+
+.Welcome__image {
+    width: 100%;
+    object-fit: contain;
+}
