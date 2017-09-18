@@ -6,7 +6,7 @@ import "codemirror/mode/htmlmixed/htmlmixed";
 import "./App.css";
 import {observer, PropTypes} from "mobx-react";
 import config from "./config";
-import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Edit from "./ui/edit/Edit";
 import Welcome from "./ui/welcome/Welcome";
 

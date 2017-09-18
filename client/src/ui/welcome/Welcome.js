@@ -5,7 +5,7 @@ import "./Welcome.css";
 
 import welcomeImage from "./welcome-image.png";
 
-const Welcome = ({}) => (
+const Welcome = () => (
     <div className="Welcome">
         <div className="Welcome__title-wrapper">
             <h1>Welcome to the Hosted Login Page Editor</h1>
